@@ -38,7 +38,7 @@
 {
     self = [super initWithFrame:frame textContainer:textContainer];
     if (self) {
-//        self.translatesAutoresizingMaskIntoConstraints = NO;//允许autoLayout
+        self.translatesAutoresizingMaskIntoConstraints = NO;//允许autoLayout
         self.backgroundColor=[UIColor whiteColor];//默认背景色
         self.contentMode = UIViewContentModeCenter;
         self.layer.cornerRadius = 6;//圆角
@@ -46,15 +46,11 @@
         //2.添加子控件
         [self addSubView];
         [self addimage];
-//        [self addLabelLine];
         //3.清空text:(可能在故事板中拖动的时候没有清空文本)
         self.text = @"";
         
         //3.监听textView文字通知
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textDidChange) name:UITextViewTextDidChangeNotification object:self];
-        
-        //4.监听键盘的弹起和收缩
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyBoardChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
     return self;
 }
@@ -66,14 +62,6 @@
 
 
 #pragma mark 控件相关
-
-//- (void)layoutSubviews{
-//    [super layoutSubviews];
-//    
-////    [self setupFrame];
-//    
-//    //    [self autoFitHeight];
-//}
 
 - (void)addSubView{
     //1.添加子控件
@@ -99,22 +87,6 @@
     [self addSubview:_PlaceHoder_Image];
 }
 
-
-
-/**
- *  设置提示标签的frame
- */
-//- (void)setupFrame{
-//    CGRect frame = self.bounds;
-//    frame.origin.x = JQPlacehoderPadding;
-//    frame.size.width -= JQPlacehoderPadding;
-//    _placehoderLbl.frame = frame;
-//    /*
-//     为了提示语和textView周围有有一定的距离
-//     提示标签的x和weight做了调整
-//     */
-//}
-
 #pragma mark 点击/响应通知方法
 /**
  *  每一次文本改变时调用
@@ -135,32 +107,8 @@
 }
 
 
-- (void)keyBoardChange:(NSNotification *)note{
-    // 0.取出键盘动画的时间
-    CGFloat duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
-    // 1.取得键盘最后的frame
-    CGRect keyboardFrame = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    // 2.计算控制器的view需要平移的距离
-    CGFloat transformY = keyboardFrame.origin.y - self.popView.frame.size.height;
-    
-    // 3.执行动画
-    [UIView animateWithDuration:duration animations:^{
-        self.popView.transform = CGAffineTransformMakeTranslation(0, transformY);
-    }];
-}
-
 
 #pragma mark 公开方法
-//- (void)setPlaceHoder:(NSString *)placeHoder{
-//    _placeHoder = placeHoder;
-//    _placehoderLbl.text = [placeHoder copy];
-//    
-//    /*为什么设置了提示语后,不调用autoFitHeight方法来更新高度呢?
-//     因为autoLayoutSubviews方法里面调用了,而且autoLayoutSubviews
-//     是在当前方法的后面被调用*/
-//}
 
 - (void)setPlacehoderColor:(UIColor *)placehoderColor{
     _placehoderColor = placehoderColor;
