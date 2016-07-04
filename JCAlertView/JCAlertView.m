@@ -355,33 +355,6 @@ NSString *const JCAlertViewWillShowNotification = @"JCAlertViewWillShowNotificat
     }
     return self;
 }
-
-//- (void)show{
-//    NSLog(@"12");
-//    [[jCSingleTon shareSingleTon].alertStack addObject:self];
-//    
-//    [self showAlert];
-//}
-
-//- (void)dismissWithCompletion:(void(^)(void))completion{
-//    NSLog(@"13");
-//    [self dismissAlertWithCompletion:^{
-//        if (completion) {
-//            completion();
-//        }
-//    }];
-//}
-////原来的版本
-//+ (void)showOneButtonWithTitle:(NSString *)title Message:(NSString *)message ButtonType:(JCAlertViewButtonType)buttonType ButtonTitle:(NSString *)buttonTitle Click:(clickHandle)click{
-//    id newClick = click;
-//    if (!newClick) {
-//        newClick = [NSNull null];
-//    }
-//
-//    JCAlertView *alertView = [JCAlertView new];
-//    [alertView configAlertViewPropertyWithTitle:title Message:message Buttons:@[@{[NSString stringWithFormat:@"%zi", buttonType] : buttonTitle}] Clicks:@[newClick] ClickWithIndex:nil];
-//}
-//
 //table版
 + (void)showOneButtonWithTitle:(NSString *)title array:(NSArray *)Array ButtonType:(JCAlertViewButtonType)buttonType ButtonTitle:(NSString *)buttonTitle Click:(clickHandle)click{
     id newClick = click;
@@ -393,32 +366,6 @@ NSString *const JCAlertViewWillShowNotification = @"JCAlertViewWillShowNotificat
 //    [alertView addSubview:tableview];
     [alertView configAlertViewPropertyWithTitle:title array:Array Buttons:@[@{[NSString stringWithFormat:@"%zi", buttonType] : buttonTitle}] Clicks:@[newClick] ClickWithIndex:nil];
 }
-//+ (void)showTwoButtonsWithTitle:(NSString *)title Message:(NSString *)message ButtonType:(JCAlertViewButtonType)
-//buttonType ButtonTitle:(NSString *)buttonTitle Click:(clickHandle)click ButtonType:(JCAlertViewButtonType)buttonType1 ButtonTitle:(NSString *)buttonTitle1 Click:(clickHandle)click1{
-//    id newClick = click;
-//    if (!newClick) {
-//        newClick = [NSNull null];
-//    }
-//    id newClick1 = click1;
-//    if (!newClick1) {
-//        newClick1 = [NSNull null];
-//    }
-//    NSLog(@"15");
-//    JCAlertView *alertView = [JCAlertView new];
-//    [alertView configAlertViewPropertyWithTitle:title Message:message Buttons:@[@{[NSString stringWithFormat:@"%zi", buttonType] : buttonTitle}, @{[NSString stringWithFormat:@"%zi", buttonType1] : buttonTitle1}] Clicks:@[newClick, newClick1] ClickWithIndex:nil];
-//}
-//原来的版本配置属性
-//- (void)configAlertViewPropertyWithTitle:(NSString *)title Message:(NSString *)message Buttons:(NSArray *)buttons Clicks:(NSArray *)clicks ClickWithIndex:(clickHandleWithIndex)clickWithIndex{
-//    self.title = title;
-//    self.message = message;
-//    self.buttons = buttons;
-//    self.clicks = clicks;
-//    self.clickWithIndex = clickWithIndex;
-//
-//    [[jCSingleTon shareSingleTon].alertStack addObject:self];
-//    
-//    [self showAlert];
-//}
 //table版
 - (void)configAlertViewPropertyWithTitle:(NSString *)title array:(NSArray *)array Buttons:(NSArray *)buttons Clicks:(NSArray *)clicks ClickWithIndex:(clickHandleWithIndex)clickWithIndex{
     self.title = title;
@@ -472,13 +419,6 @@ NSString *const JCAlertViewWillShowNotification = @"JCAlertViewWillShowNotificat
     
     [self.vc showAlert];
 }
-
-//- (void)coverViewTouched{
-//    NSLog(@"19");
-//    if (self.isDismissWhenTouchBackground) {
-//        [self dismissAlertWithCompletion:nil];
-//    }
-//}
 
 - (void)alertBtnClick:(UIButton *)btn{
 
@@ -542,10 +482,6 @@ NSString *const JCAlertViewWillShowNotification = @"JCAlertViewWillShowNotificat
     
     self.frame = CGRectMake(0, 0, JCAlertViewWidth, JCAlertViewHeight);
     NSInteger count = self.buttons.count;
-    
-//    if (count > 2) {
-//        self.frame = CGRectMake(0, 0, JCAlertViewWidth, JCAlertViewTitleLabelHeight + JCAlertViewContentHeight + JCMargin + (JCMargin + JCButtonHeight) * count);
-//    }
     self.center = CGPointMake(JCScreenWidth / 2, JCScreenHeight / 2);
     
     
@@ -563,59 +499,6 @@ NSString *const JCAlertViewWillShowNotification = @"JCAlertViewWillShowNotificat
     titleLabel.font = JCAlertViewTitleFont;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:titleLabel];
-//    //中间的内容
-//    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(JCMargin, JCAlertViewTitleLabelHeight, JCAlertViewWidth - JCMargin * 2, JCAlertViewContentHeight)];
-//    contentLabel.backgroundColor = [UIColor clearColor];
-//    contentLabel.text = self.message;
-//    contentLabel.textColor = JCAlertViewContentColor;
-//    contentLabel.font = JCAlertViewContentFont;
-//    contentLabel.numberOfLines = 0;
-//    contentLabel.textAlignment = NSTextAlignmentCenter;
-//    [self addSubview:contentLabel];
-//    //动态获取内容的高度
-//    CGFloat contentHeight = [contentLabel sizeThatFits:CGSizeMake(JCAlertViewWidth, CGFLOAT_MAX)].height;
-//    //如果内容比弹出框的高那么删除
-//    if (contentHeight > JCAlertViewContentHeight) {
-//        [contentLabel removeFromSuperview];
-//
-//        UITextView *contentView = [[UITextView alloc] initWithFrame:CGRectMake(JCMargin, JCAlertViewTitleLabelHeight, JCAlertViewWidth - JCMargin * 2, JCAlertViewContentHeight)];
-//        contentView.backgroundColor = [UIColor clearColor];
-//        contentView.text = self.message;
-//        contentView.textColor = JCAlertViewContentColor;
-//        contentView.font = JCAlertViewContentFont;
-//        contentView.editable = NO;
-//        if (JCiOS7OrLater) {
-//            contentView.selectable = NO;
-//        }
-//        [self addSubview:contentView];
-//        
-//        CGFloat realContentHeight = 0;
-//        if (JCiOS7OrLater) {
-//            [contentView.layoutManager ensureLayoutForTextContainer:contentView.textContainer];
-//            CGRect textBounds = [contentView.layoutManager usedRectForTextContainer:contentView.textContainer];
-//            CGFloat height = (CGFloat)ceil(textBounds.size.height + contentView.textContainerInset.top + contentView.textContainerInset.bottom);
-//            realContentHeight = height;
-//        }else {
-//            realContentHeight = contentView.contentSize.height;
-//        }
-//        
-//        if (realContentHeight > JCAlertViewContentHeight) {
-//            CGFloat remainderHeight = JCAlertViewMaxHeight - JCAlertViewTitleLabelHeight - JCMargin - (JCMargin + JCButtonHeight) * count;
-//            contentHeight = realContentHeight;
-//            if (realContentHeight > remainderHeight) {
-//                contentHeight = remainderHeight;
-//            }
-//            
-//            CGRect frame = contentView.frame;
-//            frame.size.height = contentHeight;
-//            contentView.frame = frame;
-//            
-//            CGRect selfFrame = self.frame;
-//            selfFrame.size.height = selfFrame.size.height + contentHeight - JCAlertViewContentHeight;
-//            self.frame = selfFrame;
-//            self.center = CGPointMake(JCScreenWidth / 2, JCScreenHeight / 2);
-//        }
-//    }
     self.table = [[YY_content_table alloc]initWithFrame:CGRectMake(JCMargin, JCAlertViewTitleLabelHeight, JCAlertViewWidth - JCMargin * 2, tableViewHeight)];
     //给table的array赋值
     [_table setArray:_array];

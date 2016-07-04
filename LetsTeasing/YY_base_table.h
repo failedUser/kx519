@@ -11,6 +11,7 @@
 @interface YY_base_table : UITableView<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,assign) NSInteger countOF;
 @property(nonatomic,assign) NSArray * cellContent;
+@property(nonatomic,assign) NSMutableArray * arrayForCell;
 
 
 @end

@@ -9,16 +9,46 @@
 #import "YY_base_table.h"
 #import "textCell.h"
 #import "JCAlertView.h"
-
+#define TimeFor
 
 @implementation YY_base_table
+//给Cell添加长按手势
+-(void)longGesture:(BOOL)bools
+{
+    if (bools) {
+        UILongPressGestureRecognizer * longGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(LongGesture:)];
+        longGesture.minimumPressDuration = 0.5;
+        [self addGestureRecognizer:longGesture];
+    }
+    else{
+        NSLog(@"长按事件失败");
+    }
+    
 
+}
+-(void)LongGesture:(UILongPressGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan)
+    {
+        CGPoint point = [gesture locationInView:self];
+        
+        NSIndexPath * indexPath = [self indexPathForRowAtPoint:point];
+        
+        if(indexPath == nil) NSLog(@"nimeia");
+        else{
+            [self showAlertWithOneButton];
+        }
+        
+    }
+    
+}
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 {
     self = [super initWithFrame:frame style:UITableViewStyleGrouped];
     self.delegate =self;
     self.dataSource = self;
 
+    self.separatorStyle = UITableViewCellSeparatorStyleNone;
     return self;
 }
 
@@ -44,23 +74,31 @@
     }
     //创建完字体格式之后就告诉cell
     cell.TextLabel.text = _cellContent[indexPath.row];
-    cell.TextLabel.numberOfLines = cell.TextLabel.text.length/23 +1;
-    [cell.TextLabel setFrame:CGRectMake(0, 30 , 320, 20*(cell.TextLabel.text.length/23+1))];
-//    NSLog(@"第%ld行的长度=%ld",(long)indexPath.row,cell.TextLabel.text.length);
-//    NSLog(@"第%ld行label的高度=%lu",(long)indexPath.row,20*(cell.TextLabel.text.length%23+1));
-//    NSLog(@"第%ld行的高度=%f",(long)indexPath.row,cell.frame.size.height);
+    cell.TextLabel.backgroundColor = [UIColor grayColor];
+    cell.TextLabel.numberOfLines = ceilf(cell.TextLabel.text.length/23)+1;
+    CGFloat  height = [self heightForString:cell.TextLabel andWidth:300];
+    [cell.TextLabel setFrame:CGRectMake(10, 18 , 300, height)];
+    [self didseleted];
     //设置cell不能被选中
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.row ==1) {
+//        NSLog(@"%@",cell.TextLabel.text);
+//        NSLog(@"这里的cell高%f",height);
+
+    }
     return cell;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString * strcon =_cellContent[indexPath.row];
+    //Arial是字体的名字，他妈的不是给字体命名啊 我日
+    UIFont * font = [UIFont fontWithName:@"Arial" size:13.0];
+    UILabel * label = [[UILabel alloc]init];
+    [label setFont:font];
+    label.text =_cellContent[indexPath.row];
+    label.numberOfLines = ceilf(label.text.length/23)+1;
+    CGFloat  height = [self heightForString:label andWidth:300];
+    return height+18;
 
-        return floor(strcon.length/23+1)*20 +30;
-//    }
-    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -70,24 +108,24 @@
 {
     return 0.01;
 }
-//degelete
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"nihaoaa");
-    
-    
+- (void)showAlertWithOneButton{
+    NSArray * aaa = [NSArray arrayWithObjects:@"今天是个好日子",@"明天是个好日子明天是个好日子明天是个好日子明天是个好日子明天是个好日子",@"后天也是个好日子",@"大后天不是个好日子",@"好日子好日子",@"1",@"2",@"3",@"4", nil];
+    [JCAlertView showOneButtonWithTitle:@"XXX评论" array:aaa ButtonType:JCAlertViewButtonTypeDefault ButtonTitle:@"发送" Click:nil];
 }
-- (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"点击啦");
-     [self showAlertWithOneButton];
+//计算行高
+- (NSInteger) heightForString:(UILabel *)textView andWidth:(float)width{
+    
+    CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+    NSInteger height = sizeToFit.height;
+    return height;
     
 }
 
-- (void)showAlertWithOneButton{
-//    YY_base_table * table = [[YY_base_table alloc]init];
-    NSArray * aaa = [NSArray arrayWithObjects:@"今天是个好日子",@"明天是个好日子明天是个好日子明天是个好日子明天是个好日子明天是个好日子",@"后天也是个好日子",@"大后天不是个好日子",@"好日子好日子",@"1",@"2",@"3",@"4", nil];
-//    [JCAlertView showOneButtonWithTitle:@"JCAletView" Message:@"1.The simplest UIAlertView replacement. You can use it just write one line of code.\n2.Don't be afraid that the length of message is too long. There is a UITextView to show long message automatically.It supports line break.\n3.Support queue to manager alertViews .\n4.Nice blur background .\n5.Block syntax.\n6.Support iOS 6 and greater.\n7.Please add Accelerate.framework before use.\n8.If you have any question or suggestion please feel free to connect me. Thank you!" ButtonType:JCAlertViewButtonTypeDefault ButtonTitle:@"got it" Click:nil];
-    [JCAlertView showOneButtonWithTitle:@"XXX评论" array:aaa ButtonType:JCAlertViewButtonTypeDefault ButtonTitle:@"发送" Click:nil];
+-(void)didseleted
+{
+       [self longGesture:YES];
 }
+
+
+
 @end

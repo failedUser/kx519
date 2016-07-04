@@ -11,6 +11,7 @@
 #import "navigation.h"
 #import "YY_base_table.h"
 #import "Personal_centerViewController.h"
+#import "YY_TextView.h"
 //动画时间
 #define kAnimationDuration 0.1
 //view高度
@@ -19,8 +20,9 @@
 #define defaultHeigeht  30
 #define addHeight 10
 
+#define HeightForTable 533
 
-@interface ViewController ()<UITextViewDelegate>
+@interface ViewController ()<UITextViewDelegate,UITableViewDelegate>
 {
     NSArray * ScellContent;
 }
@@ -29,8 +31,10 @@
 @property(nonatomic,strong) UIView * text_view;
 @property(nonatomic,strong) UILabel * line;
 @property(nonatomic,strong) UITextView * innput_textView;
-
-
+@property(nonatomic,strong)YY_base_table * yy_table;
+@property(nonatomic,strong)YY_TextView* yy_text;
+@property (weak, nonatomic)  NSLayoutConstraint *constrainH;
+@property (nonatomic,weak)UIView *popView;
 @end
 
 @implementation ViewController
@@ -39,15 +43,15 @@
     //添加键盘的监听事件
     
     //注册通知,监听键盘弹出事件
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     
-    //注册通知,监听键盘消失事件
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHidden) name:UIKeyboardDidHideNotification object:nil];
+////    注册通知,监听键盘消失事件
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHidden) name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
- ScellContent = [NSArray arrayWithObjects:@"你你你你你你你您你你你你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你",@"1你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你",@"1你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你",@"1你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你",@"1",@"1",@"妮妮", nil];
+ ScellContent = [NSArray arrayWithObjects:@"你你你你你你你您你你你你你你你你你你你你",@"你你你nininininininini你你你你您你你你你你你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你你你你你你你你您你你你你你你你你你你你你",@"1",@"妮妮", nil];
     //设置导航栏的标题
     self.navigationItem.title = @"一起来吐槽";
        //设置导航栏的背景色
@@ -66,38 +70,36 @@
    
     
     //实例化YY—table
-    YY_base_table * yy_table = [[YY_base_table alloc]init];
-    yy_table.cellContent = ScellContent;
-    yy_table.backgroundColor = [UIColor grayColor];
-    [yy_table setFrame:CGRectMake(0, 0, 320, 524)];
-    [self.view addSubview:yy_table];
-  
+    _yy_table = [[YY_base_table alloc]init];
+    _yy_table.cellContent = ScellContent;
+    _yy_table.backgroundColor = [UIColor grayColor];
+    [_yy_table setFrame:CGRectMake(0, 0, 320, HeightForTable)];
+    [self.view addSubview:_yy_table];
     
-    //textView
-    _text_view = [[UIView alloc]initWithFrame:CGRectMake(0, 524, 320, 44)];
-    _text_view.backgroundColor = [UIColor whiteColor];
+    UIView * baseVIew = [[UIView alloc]initWithFrame:CGRectMake(0, HeightForTable, 320, 30)];
+    [self.view addSubview:baseVIew];
+    
+    UILabel *  line = [[UILabel alloc]initWithFrame:CGRectMake(10, 30, 300, 1)];
+    line.backgroundColor = [UIColor blackColor];
+    [baseVIew addSubview:line];
+    self.yy_text  = [[YY_TextView alloc]initWithFrame:CGRectMake(5, 5, 320, 22)];
+    self.yy_text.constrainH = self.constrainH;
+    self.yy_text.popView = self.view;
+//    [self.view addSubview:_yy_text];
+    [baseVIew addSubview:self.yy_text];
 
-    [self.view addSubview:_text_view];
-
-   //text
-    _innput_textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 5, 300, 30)];
-    _innput_textView.backgroundColor = [UIColor whiteColor];
-    NSDictionary *attributes = @{ NSFontAttributeName:[UIFont systemFontOfSize:30]};
-    _innput_textView.attributedText = [[NSAttributedString alloc]initWithString: _innput_textView.text attributes:attributes];
-    _innput_textView.delegate = self;
-    [_text_view addSubview:_innput_textView];
-    //label
-    _line = [[UILabel alloc]initWithFrame:CGRectMake(10, 36, 300, 1)];
-    _line.backgroundColor = [UIColor blackColor];
-    [_text_view addSubview:_line];
-    
-    
     //添加手势
     UITapGestureRecognizer * Gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchesBegan)];
     [self.view addGestureRecognizer:Gesture];
     
 }
 
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [_yy_text resignFirstResponder];
+    [self.yy_text endEditing:YES];
+ 
+}
 //左边按钮的操作
 -(void)selfCenter
 {
@@ -115,45 +117,12 @@
     NSLog(@"查找什么东西");
     
 }
-
-//监听事件
-// 键盘弹出时
--(void)keyboardDidShow:(NSNotification *)notification
-{
+- (NSInteger) heightForString:(UITextView *)textView andWidth:(float)width{
     
-    //获取键盘高度
-    NSValue *keyboardObject = [[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+    NSInteger height = sizeToFit.height;
+    return height;
     
-    CGRect keyboardRect;
-    
-    [keyboardObject getValue:&keyboardRect];
-    
-    //调整放置有textView的view的位置
-    
-    //设置动画
-    [UIView beginAnimations:nil context:nil];
-    
-    //定义动画时间
-    [UIView setAnimationDuration:kAnimationDuration];
-    
-    //设置view的frame，往上平移
-    [_text_view setFrame:CGRectMake(0, self.view.frame.size.height-keyboardRect.size.height-kViewHeight, 320, 44)];
-    
-    [UIView commitAnimations];
-    
-}
-//键盘消失时
-//键盘下降的时候TextView不能同步下降，需要修改
--(void)keyboardDidHidden
-{
-    //定义动画
-    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationDuration:0.1];
-    //设置view的frame，往下平移
-//       NSLog(@"%f",_text_view.frame.origin.y);
-    [_text_view setFrame:CGRectMake(0, self.view.frame.size.height-44, 320, 44)];
- 
-    [UIView commitAnimations];
 }
 
 
@@ -161,15 +130,13 @@
 -(void)touchesBegan
 {
     //隐藏键盘
-    [_innput_textView resignFirstResponder];
+    [_yy_text resignFirstResponder];
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-//-(UIStatusBarStyle)preferredStatusBarStyle
-//{
-//    return UIStatusBarStyleLightContent;
-//}
+
 
 @end

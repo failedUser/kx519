@@ -11,26 +11,17 @@
 #define lengthForRow  19
 
 @implementation YY_content_table
-//-(void)ContentWithArray
-//{
-////    _cellContent
-//}
-
-
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 {
     self = [super initWithFrame:frame style:UITableViewStyleGrouped];
     self.delegate =self;
     self.dataSource = self;
-    
     return self;
 }
 -(void)setArray:(NSArray*)Array
 {
     self.cellContent = Array;
 }
-
-
 //tableView DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -40,8 +31,6 @@
 {
     return _cellContent.count;
 }
-
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CMainCell = @"textCell";
@@ -55,20 +44,14 @@
     cell.TextLabel.text = _cellContent[indexPath.row];
     cell.TextLabel.numberOfLines = cell.TextLabel.text.length/lengthForRow +1;
     [cell.TextLabel setFrame:CGRectMake(0, 30 , 260, 20*(cell.TextLabel.text.length/lengthForRow+1))];
-    //    NSLog(@"第%ld行的长度=%ld",(long)indexPath.row,cell.TextLabel.text.length);
-    //    NSLog(@"第%ld行label的高度=%lu",(long)indexPath.row,20*(cell.TextLabel.text.length%23+1));
-    //    NSLog(@"第%ld行的高度=%f",(long)indexPath.row,cell.frame.size.height);
     //设置cell不能被选中
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString * strcon =_cellContent[indexPath.row];
-    
     return floor(strcon.length/23+1)*20 +30;
-    //    }
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

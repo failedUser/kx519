@@ -21,22 +21,23 @@
         [dateFormatter setDateFormat:@"hh:mm:ss SS"];
         
         
-        _dataLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 100, 20)];
+        _dataLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 3, 100, 15)];
         NSString *dateString = [dateFormatter stringFromDate:currentDate];
         _dataLabel.text =dateString;
 
         
         
-        _namelabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 5, 50, 20)];
+        _namelabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 3, 50, 15)];
+  
         _namelabel.text = @"yy";
 
         _TextLabel = [[UILabel alloc]init];
 //        _TextLabel.backgroundColor = [UIColor grayColor];
         //需要顶端对其？？
-        
+    
         
 //        _TextLabel.textAlignment =NSTextAlignmentJustified;
-        [_TextLabel setContentMode:UIViewContentModeTop];
+//        [_TextLabel setContentMode:UIViewContentModeTop];
        
         //修改字体的大小
         UIFont *newFont = [UIFont fontWithName:@"Arial" size:13.0];
